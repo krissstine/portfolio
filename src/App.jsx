@@ -15,6 +15,10 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { playIntro, revealOnScroll } from './animations'
+import selfatten from '../photos/selfatten.png'
+import cwm from '../photos/cwm.png'
+import moneyplan from '../photos/moneyplan.png'
+import cert1 from '../photos/cert1.png'
 
 
 /* ---- JS: DATA object (all your content lives here) ---- */
@@ -24,42 +28,50 @@ import { playIntro, revealOnScroll } from './animations'
 const DATA = {
   name: 'Kristine',
   role: 'Full - Stack Web Developer',
-  tagline: 'Organized, reliable, and detail-driven support for busy teams and founders.',
+  tagline: 'I build clean, fast, and easy-to-use web apps that solve real problems.',
   bio: [
-    "I'm a 3rd-year BS Information Systems student at Zamboanga Peninsula Polytechnic State University, building a career as an Executive Assistant and Virtual Assistant.",
-    'I turn messy inboxes, calendars, and processes into calm, well-run systems — so the people I support can focus on the work that matters most.',
+    'I design and build full-stack web apps, from responsive React interfaces to Node.js back ends and databases, and deploy them online for real people to use.',
+    'I can take an idea from start to finish: planning the features, designing the interface, building the front end and back end, connecting a database, adding user logins and admin dashboards, and launching it online.',
   ],
-  stats: [
-    { value: '10+', label: 'Job simulations completed' },
-    { value: '2027', label: 'Graduating' },
-    { value: '24/7', label: 'Async-ready mindset' },
+  skills: [
+    'Full-Stack Web Development',
+    'React & Vite',
+    'Responsive UI Design',
+    'REST APIs & Databases',
+    'Login & Dashboard Systems',
+    'Git & GitHub',
+    'Deployment (Vercel, Render)',
   ],
 
   projects: [
     {
-      title: 'Executive Inbox & Calendar Management',
-      desc: 'A sample workflow for triaging email, scheduling meetings across time zones, and preparing daily briefs.',
-      tags: ['Google Workspace', 'Calendly', 'Notion'],
-      image: "https://media.cntraveler.com/photos/68ff82e7977accaf27ac5b35/16:9/w_2560%2Cc_limit/GettyImages-2078516558.jpg",
+      title: 'Self-Attendance System',
+      desc: 'A web app where students register, log in, and record their own attendance, with a separate admin login to manage and monitor records.',
+      tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Render'],
+      image: selfatten,
       link: 'https://self-attendace-system.onrender.com/',
     },
     {
-      title: 'Client Onboarding System',
-      desc: 'A reusable onboarding kit: intake form, welcome checklist, SOP library, and task tracker.',
-      tags: ['Notion', 'Trello', 'Canva'],
+      title: 'CommunityCleanUp: Waste Management System',
+      desc: 'A web platform that helps communities organize waste collection and clean-up activities, with a simple login and an easy-to-use dashboard.',
+      tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Vercel'],
+      image: cwm,
+      link: 'https://community-waste-management-black.vercel.app/',
     },
     {
-      title: 'Travel & Event Coordination Plan',
-      desc: 'End-to-end itinerary, budget sheet, and vendor tracker for a multi-day corporate event.',
-      tags: ['Excel', 'Google Sheets', 'Slack'],
+      title: 'Money Planner',
+      desc: 'A personal finance app to track accounts, plan monthly budgets, set savings goals, and view spending on a calendar, all in one place.',
+      tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Vercel'],
+      image: moneyplan,
+      link: 'https://money-planner-xi.vercel.app/',
     },
   ],
 
   stack: [
-    { group: 'Productivity', items: ['Notion', 'Google Workspace', 'Microsoft 365', 'Trello', 'Asana'] },
-    { group: 'Communication', items: ['Slack', 'Zoom', 'Gmail', 'Microsoft Teams', 'Calendly'] },
-    { group: 'Design & Docs', items: ['Canva', 'Google Docs', 'Word', 'PowerPoint', 'Google Slides'] },
-    { group: 'Data & Admin', items: ['Excel', 'Google Sheets', 'Forms & Surveys', 'Expense Tracking', 'Data Entry'] },
+    { group: 'Frontend (Web)', items: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Vite', 'Tailwind CSS'] },
+    { group: 'Backend & Database', items: ['Node.js', 'Express', 'REST APIs', 'MySQL', 'PostgreSQL', 'MongoDB'] },
+    { group: 'Mobile & Desktop Apps', items: ['React Native', 'Flutter', 'Electron', 'Java', 'C# (.NET)'] },
+    { group: 'DevOps & Tools', items: ['Git', 'GitHub', 'Docker', 'Postman', 'Figma', 'VS Code', 'Render', 'Vercel'] },
   ],
 
   timeline: [
@@ -83,64 +95,22 @@ const DATA = {
     },
   ],
 
-  testimonials: [
+  certificates: [
     {
-      quote: 'Replace this with a real testimonial from a professor, supervisor, or client.',
-      who: 'Name, Title',
+      title: 'Certificate of Participation',
+      issuer: 'Western Mindanao State University · College of Computing Studies',
+      date: 'March 21, 2026',
+      desc: 'Awarded for active involvement in and successful completion of the CS TALK: Hack. Build. Innovate. online seminar, recognizing commitment to professional growth and the advancement of the CS community.',
+      image: cert1,
     },
-    {
-      quote: 'Reliable, proactive, and always ahead of the deadline.',
-      who: 'Add a real reference here',
-    },
-  ],
-  badges: ['Bloomberg Simulation', 'Datacom Simulation', 'PwC Simulation', 'Third Bridge Simulation', 'Customer Service Simulation'],
-
-  caseStudies: [
-    {
-      title: 'Cutting Scheduling Back-and-Forth by Half',
-      problem: 'A busy founder lost hours each week coordinating meetings across time zones.',
-      solution: 'Set up a shared booking link, buffer rules, and a weekly agenda template.',
-      result: 'Fewer scheduling emails and a calmer, more predictable calendar.',
-    },
-    {
-      title: 'Building a One-Page SOP Library',
-      problem: 'Recurring tasks lived in scattered chats and memory.',
-      solution: 'Documented each task in a simple Notion SOP database with owners and checklists.',
-      result: 'Faster handoffs and consistent quality across the team.',
-    },
-  ],
-
-  openSource: [
-    {
-      title: 'Free Notion Templates',
-      desc: 'Shareable planners and trackers for students and freelancers.',
-      link: '#',
-    },
-    {
-      title: 'Community Volunteer Work',
-      desc: 'Project support and coordination through JCI Zamboanga City.',
-      link: '#',
-    },
-    {
-      title: 'Shared Study Resources',
-      desc: 'Open notes and guides for information systems coursework.',
-      link: '#',
-    },
-  ],
-
-  posts: [
-    { title: '5 Habits of a Great Virtual Assistant', date: 'Coming soon', read: '4 min read', link: '#' },
-    { title: 'How I Organize an Executive Inbox', date: 'Coming soon', read: '6 min read', link: '#' },
-    { title: 'Notion Systems Every EA Should Know', date: 'Coming soon', read: '5 min read', link: '#' },
   ],
 
   contact: {
-    email: 'your.email@example.com',
+    email: 'maekristine56@gmail.com',
     location: 'Zamboanga City, Philippines',
     links: [
-      { label: 'LinkedIn', href: '#' },
-      { label: 'Notion Portfolio', href: '#' },
-      { label: 'Email', href: 'mailto:your.email@example.com' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/kristine-mae-regidor/' },
+      { label: 'Teams', href: 'https://teams.live.com/l/chat/0/0?users=maekristine56@gmail.com' },
     ],
   },
 }
@@ -152,9 +122,6 @@ const NAV = [
   ['stack', 'Tech Stack'],
   ['experience', 'Timeline'],
   ['proof', 'Proof'],
-  ['cases', 'Case Studies'],
-  ['open', 'Open Source'],
-  ['blog', 'Blog'],
   ['contact', 'Contact'],
 ]
 
@@ -162,7 +129,6 @@ const NAV = [
 function Section({ id, eyebrow, title, children }) {
   return (
     /* HTML (JSX) template used by every section */
-    
     <section id={id} className="sec reveal">
       <p className="eyebrow">{eyebrow}</p>
       <h2 className="sec-title">{title}</h2>
@@ -173,19 +139,26 @@ function Section({ id, eyebrow, title, children }) {
 
 /* ---- JS: the main App component ---- */
 function App() {
-  
 
   /* ---- JS LOGIC: state (the page's "memory") ---- */
   const [menuOpen, setMenuOpen] = useState(false)   // is the mobile menu open?
   const [status, setStatus] = useState('idle')  // idle | sending | sent | error
   const [form, setForm] = useState({ name: '', email: '', message: '' }) // what's typed in the form
+  const [zoom, setZoom] = useState(null)   // certificate being viewed bigger (null = closed)
 
-  /* ---- JS LOGIC: sets the browser tab title ---- */
+  /* ---- JS LOGIC: plays the intro animation and reveals sections on scroll ---- */
   useEffect(() => {
-  playIntro()
-  const stop = revealOnScroll()
-  return stop
-}, [])
+    playIntro()
+    const stop = revealOnScroll()
+    return stop
+  }, [])
+
+  /* ---- JS LOGIC: close the big photo with the Esc key ---- */
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setZoom(null) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   /* ---- JS LOGIC: runs when the contact form is submitted ---- */
   const handleSubmit = async (e) => {
@@ -227,7 +200,6 @@ function App() {
   return (
     <div className="portfolio">
 
-
       {/* HTML: floating blobs behind the glass */}
       <div className="blob b1" />
       <div className="blob b2" />
@@ -260,45 +232,39 @@ function App() {
               <a href="#contact" className="btn primary">Work with me</a>
               <a href="#projects" className="btn ghost">See my work</a>
             </div>
-            <div className="stats">
-              {DATA.stats.map((s) => (
-                <div key={s.label} className="stat">
-                  <strong>{s.value}</strong>
-                  <span>{s.label}</span>
-                </div>
-              ))}
+            <div className="chips" style={{ marginTop: '24px' }}>
+              {DATA.skills.map((k) => <span key={k} className="chip">{k}</span>)}
             </div>
           </div>
-
         </section>
 
-    {/* HTML: Full - Stack Web DeveloperPROJECTS */}
-<Section id="projects" eyebrow="Selected work" title="Full - Stack Web DeveloperProjects">
-  <div className="grid three">
-    {DATA.projects.map((p) => (
-      <article key={p.title} className="card glass hover">
-        {p.image ? (
-          <img className="thumb-img" src={p.image} alt={p.title} />
-        ) : (
-          <div className="thumb" />
-        )}
-        <h3>{p.title}</h3>
-        <p>{p.desc}</p>
-        <div className="chips">
-          {p.tags.map((t) => <span key={t} className="chip">{t}</span>)}
-        </div>
-       <a
-  className="btn-view"
-  href={p.link || '#'}
-  target={p.link ? '_blank' : undefined}
-  rel="noopener noreferrer"
->
-  View <span className="arrow">→</span>
-</a>
-      </article>
-    ))}
-  </div>
-</Section>
+        {/* HTML: PROJECTS */}
+        <Section id="projects" eyebrow="Selected work" title="Projects">
+          <div className="grid three">
+            {DATA.projects.map((p) => (
+              <article key={p.title} className="card glass hover">
+                {p.image ? (
+                  <img className="thumb-img" src={p.image} alt={p.title} />
+                ) : (
+                  <div className="thumb" />
+                )}
+                <h3>{p.title}</h3>
+                <p>{p.desc}</p>
+                <div className="chips">
+                  {p.tags.map((t) => <span key={t} className="chip">{t}</span>)}
+                </div>
+                <a
+                  className="btn-view"
+                  href={p.link || '#'}
+                  target={p.link ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                >
+                  View <span className="arrow">→</span>
+                </a>
+              </article>
+            ))}
+          </div>
+        </Section>
 
         {/* HTML: TECH STACK */}
         <Section id="stack" eyebrow="Tools I use" title="Tech Stack">
@@ -331,59 +297,26 @@ function App() {
           </div>
         </Section>
 
-        {/* HTML: SOCIAL PROOF */}
-        <Section id="proof" eyebrow="Kind words & credentials" title="Social Proof">
+        {/* HTML: SOCIAL PROOF (certificates + badges) */}
+        <Section id="proof" eyebrow="Certificates & credentials" title="Social Proof">
           <div className="grid two">
-            {DATA.testimonials.map((t, i) => (
-              <blockquote key={i} className="card glass quote">
-                <p>“{t.quote}”</p>
-                <footer>— {t.who}</footer>
-              </blockquote>
-            ))}
-          </div>
-          <div className="chips badges">
-            {DATA.badges.map((b) => <span key={b} className="chip badge">🏅 {b}</span>)}
-          </div>
-        </Section>
-
-        {/* HTML: CASE STUDIES */}
-        <Section id="cases" eyebrow="Problem → Solution → Result" title="Case Studies">
-          <div className="grid two">
-            {DATA.caseStudies.map((c) => (
+            {DATA.certificates.map((c) => (
               <article key={c.title} className="card glass hover">
+                <img
+                  src={c.image}
+                  alt={c.title}
+                  title="Click to view bigger"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setZoom(c)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') setZoom(c) }}
+                  style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '12px', marginBottom: '14px', cursor: 'zoom-in' }}
+                />
                 <h3>{c.title}</h3>
-                <dl>
-                  <dt>Problem</dt><dd>{c.problem}</dd>
-                  <dt>Solution</dt><dd>{c.solution}</dd>
-                  <dt>Result</dt><dd>{c.result}</dd>
-                </dl>
+                <p className="org">{c.issuer}</p>
+                <span className="when">{c.date}</span>
+                <p>{c.desc}</p>
               </article>
-            ))}
-          </div>
-        </Section>
-
-        {/* HTML: OPEN SOURCE CONTRIBUTIONS */}
-        <Section id="open" eyebrow="Giving back" title="Open Source Contributions">
-          <div className="grid three">
-            {DATA.openSource.map((o) => (
-              <a key={o.title} href={o.link} className="card glass hover linkcard">
-                <h3>{o.title}</h3>
-                <p>{o.desc}</p>
-                <span className="more">View →</span>
-              </a>
-            ))}
-          </div>
-        </Section>
-
-        {/* HTML: BLOG / ARTICLES */}
-        <Section id="blog" eyebrow="Thoughts & guides" title="Blog / Articles">
-          <div className="grid three">
-            {DATA.posts.map((p) => (
-              <a key={p.title} href={p.link} className="card glass hover linkcard">
-                <span className="when">{p.date} · {p.read}</span>
-                <h3>{p.title}</h3>
-                <span className="more">Read article →</span>
-              </a>
             ))}
           </div>
         </Section>
@@ -397,7 +330,7 @@ function App() {
               <p>📍 {DATA.contact.location}</p>
               <div className="chips">
                 {DATA.contact.links.map((l) => (
-                  <a key={l.label} href={l.href} className="chip link">{l.label}</a>
+                  <a key={l.label} href={l.href} className="chip link" target="_blank" rel="noopener noreferrer">{l.label}</a>
                 ))}
               </div>
             </div>
@@ -424,6 +357,35 @@ function App() {
           </div>
         </Section>
       </main>
+
+      {/* HTML: BIG PHOTO VIEWER (opens when a certificate is clicked) */}
+      {zoom && (
+        <div
+          onClick={() => setZoom(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 1000,
+            background: 'rgba(0, 0, 0, 0.88)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '24px', cursor: 'zoom-out',
+          }}
+        >
+          <button
+            onClick={() => setZoom(null)}
+            aria-label="Close"
+            style={{
+              position: 'absolute', top: '16px', right: '20px',
+              background: 'transparent', border: 'none', color: '#fff',
+              fontSize: '2rem', lineHeight: 1, cursor: 'pointer',
+            }}
+          >✕</button>
+          <img
+            src={zoom.image}
+            alt={zoom.title}
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: '12px', cursor: 'default' }}
+          />
+        </div>
+      )}
 
       {/* HTML: FOOTER */}
       <footer className="foot">
