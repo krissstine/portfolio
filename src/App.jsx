@@ -12,8 +12,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import './Details.css'
 import { playIntro, revealOnScroll, trackScroll } from './animations'
-import SelfProj from './Selfproj.jsx'
-import selfatten from '../photos/selfatten.png'
+import SelfProj, { SELF_PROJECT } from './Selfproj.jsx'
 import cwm from '../photos/cwm.png'
 import moneyplan from '../photos/moneyplan.png'
 import cert1 from '../photos/cert1.png'
@@ -25,18 +24,18 @@ import cert1 from '../photos/cert1.png'
    ------------------------------------------------------------------ */
 const DATA = {
   name: 'Kristine',
-  role: 'Full - Stack Web Developer',
-  tagline: 'I build clean, fast, and easy-to-use web apps that solve real problems.',
+  role: 'Full-Stack Web Developer',
+  tagline: 'I build web apps that real people use, like a student attendance system with live photo clock-in.',
   bio: [
-    'I design and build full-stack web apps, from responsive React interfaces to Node.js back ends and databases, and deploy them online for real people to use.',
-    'I can take an idea from start to finish: planning the features, designing the interface, building the front end and back end, connecting a database, adding user logins and admin dashboards, and launching it online.',
+    'I build fast, reliable web apps, from React interfaces to REST API back ends and databases, and ship them so real users can actually use them.',
+    'I take ideas from plan to launch: feature scoping, UI design, front end, back end, database, authentication, admin dashboards, and deployment.',
   ],
   skills: [
     'Full-Stack Web Development',
     'React & Vite',
     'Responsive UI Design',
     'REST APIs & Databases',
-    'Login & Dashboard Systems',
+    'Authentication & Admin Dashboards',
     'Git & GitHub',
     'Deployment (Vercel, Render)',
   ],
@@ -44,15 +43,15 @@ const DATA = {
   /* Each project has: desc (short, shown on the card) and
      long / features / role (shown in the Details popup).
      A project can also have Details: a component that fills the popup
-     with its own content (the Self-Attendance System uses Selfproj.jsx). */
+     with its own content.
+
+     The Self-Attendance System keeps ALL of its content in Selfproj.jsx
+     (title, card text, tags, image, live link, and the Details popup).
+     To change anything about it, edit Selfproj.jsx only. */
   projects: [
     {
-      title: 'Self-Attendance System',
-      desc: 'A web app where students register, log in, and record their own attendance, with a separate admin login to manage and monitor records.',
-      Details: SelfProj, // full details come from Selfproj.jsx
-      tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Render'],
-      image: selfatten,
-      link: 'https://self-attendace-system.onrender.com/',
+      ...SELF_PROJECT,   // title, desc, tags, image, link, and the rest, from Selfproj.jsx
+      Details: SelfProj, // the popup content, also from Selfproj.jsx
     },
     {
       title: 'CommunityCleanUp: Waste Management System',

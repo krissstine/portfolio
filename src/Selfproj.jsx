@@ -82,6 +82,7 @@ export const SELF_PROJECT = {
     languages: ['PHP'],
     tools: ['Laravel', 'PostgreSQL', 'Composer', 'Artisan CLI', 'REST API', 'Bearer-token authentication', 'Docker'],
     hosting: 'Render (Docker Web Service, Singapore)',
+    database: 'Neon (managed PostgreSQL)',
   },
 
   /* Other tools and workflow */
@@ -116,7 +117,7 @@ export const SELF_PROJECT = {
   ],
 
   /* Used by the project card in App.jsx */
-  tags: ['React', 'Vite', 'JavaScript', 'Laravel', 'PHP', 'PostgreSQL', 'Docker', 'Render'],
+  tags: ['React', 'Vite', 'JavaScript', 'Laravel', 'PHP', 'PostgreSQL', 'Neon', 'Docker', 'Render'],
 }
 
 /* ---- small helpers ---- */
@@ -200,6 +201,7 @@ function SelfProj() {
       <ChipGroup title="Back end: languages" items={p.backend.languages} />
       <ChipGroup title="Back end: frameworks and tools" items={p.backend.tools} />
       <p className="modal-text">Hosted on: {p.backend.hosting}</p>
+      <p className="modal-text">Database hosted on: {p.backend.database}</p>
 
       <ChipGroup title="Workflow and tools" items={p.workflow} />
       <ChipGroup title="Concepts I practiced" items={p.concepts} />
