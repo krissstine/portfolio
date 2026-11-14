@@ -13,8 +13,8 @@ import './App.css'
 import './Details.css'
 import { playIntro, revealOnScroll, trackScroll } from './animations'
 import SelfProj, { SELF_PROJECT } from './Selfproj.jsx'
-import cwm from '../photos/cwm.png'
-import moneyplan from '../photos/moneyplan.png'
+import MoneyPlan, { MONEY_PROJECT } from './Moneyplan.jsx'
+import CwmDetails, { CWM_PROJECT } from './Cwm.jsx'
 import cert1 from '../photos/cert1.png'
 
 
@@ -40,48 +40,25 @@ const DATA = {
     'Deployment (Vercel, Render)',
   ],
 
-  /* Each project has: desc (short, shown on the card) and
-     long / features / role (shown in the Details popup).
-     A project can also have Details: a component that fills the popup
-     with its own content.
+  /* Each project has: desc and tags (shown on the card), and a Details
+     component that fills the popup with its own content.
 
-     The Self-Attendance System keeps ALL of its content in Selfproj.jsx
-     (title, card text, tags, image, live link, and the Details popup).
-     To change anything about it, edit Selfproj.jsx only. */
+     Each project keeps ALL of its content in its own file:
+     Selfproj.jsx (Self-Attendance), Moneyplan.jsx (Money Planner),
+     and Cwm.jsx (CommunityCleanUp). To change anything about them,
+     edit those files only. */
   projects: [
     {
       ...SELF_PROJECT,   // title, desc, tags, image, link, and the rest, from Selfproj.jsx
-      Details: SelfProj, // the popup content, also from Selfproj.jsx
+      Details: SelfProj, // the popup content, from Selfproj.jsx
     },
     {
-      title: 'CommunityCleanUp: Waste Management System',
-      desc: 'A web platform that helps communities organize waste collection and clean-up activities, with a simple login and an easy-to-use dashboard.',
-      long: 'A platform that helps communities organize waste collection schedules and clean-up drives in one place.',
-      features: [
-        'Simple login system',
-        'Dashboard for clean-up activities',
-        'Schedule and track waste collection',
-        'Responsive layout for phones and desktops',
-      ],
-      role: 'Full-stack developer (design, build, deploy)',
-      tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Vercel'],
-      image: cwm,
-      link: 'https://community-waste-management-black.vercel.app/',
+      ...CWM_PROJECT,      // title, desc, tags, image, link, and the rest, from Cwm.jsx
+      Details: CwmDetails, // the popup content, from Cwm.jsx
     },
     {
-      title: 'Money Planner',
-      desc: 'A personal finance app to track accounts, plan monthly budgets, set savings goals, and view spending on a calendar, all in one place.',
-      long: 'A personal finance app that keeps accounts, budgets, savings goals, and spending history together.',
-      features: [
-        'Track multiple accounts',
-        'Monthly budget planning',
-        'Savings goals',
-        'Calendar view of spending',
-      ],
-      role: 'Full-stack developer (design, build, deploy)',
-      tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Vercel'],
-      image: moneyplan,
-      link: 'https://money-planner-xi.vercel.app/',
+      ...MONEY_PROJECT,   // title, desc, tags, image, link, and the rest, from Moneyplan.jsx
+      Details: MoneyPlan, // the popup content, from Moneyplan.jsx
     },
   ],
 
@@ -400,7 +377,7 @@ function App() {
 
             <h3 className="modal-title">{project.title}</h3>
 
-            {/* Projects with their own Details component (Selfproj.jsx) fill the popup themselves */}
+            {/* Projects with their own Details component fill the popup themselves */}
             {project.Details ? (
               <project.Details />
             ) : (
