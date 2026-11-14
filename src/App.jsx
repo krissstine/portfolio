@@ -3,18 +3,16 @@
    ║                                                                  ║
    ║  LAYER 1 → JAVASCRIPT  (top)    imports, DATA, NAV, logic        ║
    ║  LAYER 2 → HTML / JSX  (bottom) everything inside return ( )     ║
-   ║  LAYER 3 → CSS         → moved to App.css (imported above)       ║
+   ║  LAYER 3 → CSS         → App.css + Details.css (imported above)  ║
    ╚══════════════════════════════════════════════════════════════════╝ */
 
-
-/* ████████████████████████████████████████████████████████████████████
-   ██  LAYER 1 — JAVASCRIPT  (START)                                 ██
-   ████████████████████████████████████████████████████████████████████ */
 
 /* ---- JS: imports ---- */
 import { useState, useEffect } from 'react'
 import './App.css'
-import { playIntro, revealOnScroll } from './animations'
+import './Details.css'
+import { playIntro, revealOnScroll, trackScroll } from './animations'
+import SelfProj from './Selfproj.jsx'
 import selfatten from '../photos/selfatten.png'
 import cwm from '../photos/cwm.png'
 import moneyplan from '../photos/moneyplan.png'
@@ -43,10 +41,15 @@ const DATA = {
     'Deployment (Vercel, Render)',
   ],
 
+  /* Each project has: desc (short, shown on the card) and
+     long / features / role (shown in the Details popup).
+     A project can also have Details: a component that fills the popup
+     with its own content (the Self-Attendance System uses Selfproj.jsx). */
   projects: [
     {
       title: 'Self-Attendance System',
       desc: 'A web app where students register, log in, and record their own attendance, with a separate admin login to manage and monitor records.',
+      Details: SelfProj, // full details come from Selfproj.jsx
       tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Render'],
       image: selfatten,
       link: 'https://self-attendace-system.onrender.com/',
@@ -54,6 +57,14 @@ const DATA = {
     {
       title: 'CommunityCleanUp: Waste Management System',
       desc: 'A web platform that helps communities organize waste collection and clean-up activities, with a simple login and an easy-to-use dashboard.',
+      long: 'A platform that helps communities organize waste collection schedules and clean-up drives in one place.',
+      features: [
+        'Simple login system',
+        'Dashboard for clean-up activities',
+        'Schedule and track waste collection',
+        'Responsive layout for phones and desktops',
+      ],
+      role: 'Full-stack developer (design, build, deploy)',
       tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Vercel'],
       image: cwm,
       link: 'https://community-waste-management-black.vercel.app/',
@@ -61,6 +72,14 @@ const DATA = {
     {
       title: 'Money Planner',
       desc: 'A personal finance app to track accounts, plan monthly budgets, set savings goals, and view spending on a calendar, all in one place.',
+      long: 'A personal finance app that keeps accounts, budgets, savings goals, and spending history together.',
+      features: [
+        'Track multiple accounts',
+        'Monthly budget planning',
+        'Savings goals',
+        'Calendar view of spending',
+      ],
+      role: 'Full-stack developer (design, build, deploy)',
       tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Vercel'],
       image: moneyplan,
       link: 'https://money-planner-xi.vercel.app/',
@@ -128,7 +147,6 @@ const NAV = [
 /* ---- JS function that returns a small reusable piece of HTML ---- */
 function Section({ id, eyebrow, title, children }) {
   return (
-    /* HTML (JSX) template used by every section */
     <section id={id} className="sec reveal">
       <p className="eyebrow">{eyebrow}</p>
       <h2 className="sec-title">{title}</h2>
@@ -142,23 +160,33 @@ function App() {
 
   /* ---- JS LOGIC: state (the page's "memory") ---- */
   const [menuOpen, setMenuOpen] = useState(false)   // is the mobile menu open?
-  const [status, setStatus] = useState('idle')  // idle | sending | sent | error
-  const [form, setForm] = useState({ name: '', email: '', message: '' }) // what's typed in the form
-  const [zoom, setZoom] = useState(null)   // certificate being viewed bigger (null = closed)
+  const [status, setStatus] = useState('idle')      // idle | sending | sent | error
+  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [zoom, setZoom] = useState(null)            // certificate being viewed bigger
+  const [project, setProject] = useState(null)      // project shown in the Details popup
 
   /* ---- JS LOGIC: plays the intro animation and reveals sections on scroll ---- */
   useEffect(() => {
     playIntro()
-    const stop = revealOnScroll()
-    return stop
+    const stopReveal = revealOnScroll()
+    const stopScroll = trackScroll()
+    return () => { stopReveal(); stopScroll() }
   }, [])
 
-  /* ---- JS LOGIC: close the big photo with the Esc key ---- */
+  /* ---- JS LOGIC: close popups with the Esc key ---- */
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') setZoom(null) }
+    const onKey = (e) => {
+      if (e.key === 'Escape') { setZoom(null); setProject(null) }
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
+
+  /* ---- JS LOGIC: stop the page from scrolling behind an open popup ---- */
+  useEffect(() => {
+    document.body.style.overflow = (project || zoom) ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [project, zoom])
 
   /* ---- JS LOGIC: runs when the contact form is submitted ---- */
   const handleSubmit = async (e) => {
@@ -188,17 +216,11 @@ function App() {
     }
   }
 
-/* ████████████████████████████████████████████████████████████████████
-   ██  LAYER 1 — JAVASCRIPT  (END of the logic part)                 ██
-   ████████████████████████████████████████████████████████████████████ */
-
-
-/* ████████████████████████████████████████████████████████████████████
-   ██  LAYER 2 — HTML (written as JSX)  (START)                      ██
-   ██  Everything inside return ( ... ) is the page structure.       ██
-   ████████████████████████████████████████████████████████████████████ */
   return (
     <div className="portfolio">
+
+      {/* HTML: thin progress bar at the very top (fills as you scroll) */}
+      <div className="scroll-progress" aria-hidden="true" />
 
       {/* HTML: floating blobs behind the glass */}
       <div className="blob b1" />
@@ -210,7 +232,6 @@ function App() {
         <a href="#top" className="brand">{DATA.name}<span>.</span></a>
         <button className="burger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">☰</button>
         <nav className={menuOpen ? 'links open' : 'links'}>
-          {/* JS inside HTML: .map() loops through the NAV list */}
           {NAV.map(([id, label]) => (
             <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>
           ))}
@@ -253,14 +274,21 @@ function App() {
                 <div className="chips">
                   {p.tags.map((t) => <span key={t} className="chip">{t}</span>)}
                 </div>
-                <a
-                  className="btn-view"
-                  href={p.link || '#'}
-                  target={p.link ? '_blank' : undefined}
-                  rel="noopener noreferrer"
-                >
-                  View <span className="arrow">→</span>
-                </a>
+
+                {/* Details button opens the popup, View opens the live site */}
+                <div className="card-actions">
+                  <button type="button" className="btn-view" onClick={() => setProject(p)}>
+                    Details
+                  </button>
+                  <a
+                    className="btn-view"
+                    href={p.link || '#'}
+                    target={p.link ? '_blank' : undefined}
+                    rel="noopener noreferrer"
+                  >
+                    View <span className="arrow">→</span>
+                  </a>
+                </div>
               </article>
             ))}
           </div>
@@ -334,7 +362,6 @@ function App() {
                 ))}
               </div>
             </div>
-            {/* HTML form → connected to the JS function handleSubmit (Layer 1) */}
             <form className="card glass form" onSubmit={handleSubmit}>
               <input
                 required placeholder="Your name" value={form.name}
@@ -357,6 +384,64 @@ function App() {
           </div>
         </Section>
       </main>
+
+      {/* HTML: PROJECT DETAILS POPUP (opens when "Details" is clicked) */}
+      {project && (
+        <div className="modal-backdrop" onClick={() => setProject(null)}>
+          <div
+            className="modal glass"
+            role="dialog"
+            aria-modal="true"
+            aria-label={project.title}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close" onClick={() => setProject(null)} aria-label="Close">✕</button>
+
+            {project.image && <img className="modal-img" src={project.image} alt={project.title} />}
+
+            <h3 className="modal-title">{project.title}</h3>
+
+            {/* Projects with their own Details component (Selfproj.jsx) fill the popup themselves */}
+            {project.Details ? (
+              <project.Details />
+            ) : (
+              <>
+                <p className="modal-text">{project.long || project.desc}</p>
+
+                {project.features && (
+                  <>
+                    <h4 className="modal-sub">Key features</h4>
+                    <ul className="modal-list">
+                      {project.features.map((f) => <li key={f}>{f}</li>)}
+                    </ul>
+                  </>
+                )}
+
+                {project.role && (
+                  <>
+                    <h4 className="modal-sub">My role</h4>
+                    <p className="modal-text">{project.role}</p>
+                  </>
+                )}
+              </>
+            )}
+
+            <h4 className="modal-sub">Built with</h4>
+            <div className="chips">
+              {project.tags.map((t) => <span key={t} className="chip">{t}</span>)}
+            </div>
+
+            <div className="modal-actions">
+              {project.link && (
+                <a className="btn primary" href={project.link} target="_blank" rel="noopener noreferrer">
+                  Visit live site →
+                </a>
+              )}
+              <button className="btn ghost" onClick={() => setProject(null)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* HTML: BIG PHOTO VIEWER (opens when a certificate is clicked) */}
       {zoom && (
@@ -387,6 +472,16 @@ function App() {
         </div>
       )}
 
+      {/* HTML: BACK-TO-TOP BUTTON (hidden until you scroll down) */}
+      <button
+        type="button"
+        className="to-top"
+        aria-label="Scroll back to top"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      >
+        ↑
+      </button>
+
       {/* HTML: FOOTER */}
       <footer className="foot">
         © {new Date().getFullYear()} {DATA.name} · Built with React + Vite
@@ -394,8 +489,5 @@ function App() {
     </div>
   )
 }
-/* ████████████████████████████████████████████████████████████████████
-   ██  LAYER 2 — HTML (JSX)  (END)                                   ██
-   ████████████████████████████████████████████████████████████████████ */
 
 export default App
