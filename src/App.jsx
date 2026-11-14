@@ -25,7 +25,7 @@ import cert1 from '../photos/cert1.png'
 const DATA = {
   name: 'Kristine',
   role: 'Full-Stack Web Developer',
-  tagline: 'I build web apps that real people use, like a student attendance system with live photo clock-in.',
+  tagline: 'I turn ideas into reliable, easy-to-use web apps, from the first sketch to launch.',
   bio: [
     'I build fast, reliable web apps, from React interfaces to REST API back ends and databases, and ship them so real users can actually use them.',
     'I take ideas from plan to launch: feature scoping, UI design, front end, back end, database, authentication, admin dashboards, and deployment.',
