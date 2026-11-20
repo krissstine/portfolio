@@ -34,6 +34,42 @@ export const SELF_PROJECT = {
   link: 'https://self-attendace-system.onrender.com/',
   role: 'Full-stack developer (planning, design, front end, back end, deploy)',
 
+  /* ---- CASE STUDY: the questions interviewers ask ---- */
+  problem:
+    'Taking attendance by hand on paper or in a chat is slow and easy to get wrong. Names get missed, late arrivals are not recorded, and nobody can prove who was actually in class. A plain "I am present" button would be just as easy to fake. This system fixes both problems: students clock in only while their class is in session and must attach a live evidence photo, and the admin can review every photo and correct any record, so attendance is faster and backed by proof.',
+
+  approach: [
+    'Why Laravel for the back end: it gives a lot of the hard parts out of the box, including routing, validation, database migrations and models (MVC), and token-based authentication. As a first full-stack project, that let me spend my time on the attendance rules instead of building plumbing from scratch.',
+    'Why PostgreSQL instead of MySQL: the data is relational (students, subjects, enrollments, attendance records, messages), and PostgreSQL handles that well with strict data types and constraints that protect the data. It is also what managed hosts such as Neon offer, so I could use a managed database in the cloud instead of running my own.',
+    'Why a separate React front end and Laravel API: keeping them apart meant I could host and change each one on its own, and the same API could serve a different front end later.',
+    'Why Docker on Render: the container runs the same way on my machine and on the server, so deployment does not depend on how the server happens to be set up.',
+    'Why two separate logins: students and admins can do very different things, so each has its own login and token, and student screens never expose admin actions.',
+  ],
+
+  hardPart: [
+    'Photo capture and upload: the app takes a live photo with the camera (getUserMedia), draws it on a canvas with the class, date, and time stamped on it, converts it to JPEG, and sends it to the API as multipart form data. A phone-camera fallback covers devices where the live camera is blocked.',
+    'Protecting the photos: evidence photos are private, so the front end loads them with a Bearer token instead of an open link. Students can delete their own photo, the record stays, and old photos are removed automatically after 16 weeks.',
+    'Keeping records honest: class windows are decided by the server\'s clock, not the student\'s phone, so changing the phone\'s time does not let someone clock in. The admin can review every photo and correct any status.',
+    'Schedule rules: enrolling a student checks for schedule clashes, and the admin attendance list is blocked outside the class schedule unless the admin chooses to open it anyway.',
+    'Connecting the pieces in the cloud: the React site, the Laravel API, and the database live on different hosts, so I had to set up CORS, environment variables, and a Docker build before they could talk to each other.',
+  ],
+
+  result: [
+    'Deployed and running at the live link above: the front end on Render, the Laravel API in a Docker container on Render, and the database on Neon.',
+    'The full flow works end to end: register, log in, clock in with a photo, review attendance as an admin, and send and answer messages.',
+    'Works on phones and desktops, with keyboard and screen-reader support.',
+  ],
+
+  retrospective: [
+    'Add a stronger check on who is clocking in. Right now there is no location or biometric check, so the live photo and admin review are the only safeguards. A location check would make it harder to clock in from home.',
+    'Write automated tests for the attendance rules (class windows, late versus present, schedule clashes), since a small mistake there gives wrong records.',
+    'Plan the database and the API first on paper, so fewer changes are needed halfway through. As my first full-stack project, I learned a lot by building and then reshaping it.',
+    'Store photos in dedicated file storage with backups, instead of relying on the app server, so evidence is not lost if the server is rebuilt.',
+  ],
+
+  swimlaneExplain:
+    'This swimlane diagram follows each function (register, clock in, history, messages, attendance, evidence, subjects) across five lanes: the student, the admin, the React front end, the Laravel API, and PostgreSQL. People only act and decide, the React front end collects input and shows results, the Laravel API applies the rules (login, class-time checks, schedule clashes) and PostgreSQL only stores the records. I designed it in lanes on purpose, to show where each rule lives and what happens in each hand-off, for example a student\'s photo travelling from the camera to the API to the admin\'s review screen. Because every rule sits in the API lane, the front end can be changed or replaced without changing how attendance is protected.',
+
   studentFeatures: [
     'Two-step registration and login',
     "Today view: classes in session right now, based on the server's clock",
@@ -152,16 +188,26 @@ function SelfProj() {
       <h4 className="modal-sub">About this project</h4>
       <p className="modal-text">{p.long}</p>
 
+      <h4 className="modal-sub">The problem</h4>
+      <p className="modal-text">{p.problem}</p>
+
+      <BulletGroup title="My approach: why these choices" items={p.approach} />
+
       <BulletGroup title="Student features" items={p.studentFeatures} />
       <BulletGroup title="Admin features" items={p.adminFeatures} />
       <BulletGroup title="Across the app" items={p.generalFeatures} />
       <BulletGroup title="How self-recorded attendance is kept honest" items={p.integrity} />
+
+      <BulletGroup title="The hardest parts and how I solved them" items={p.hardPart} />
+      <BulletGroup title="Result" items={p.result} />
+      <BulletGroup title="What I would do differently" items={p.retrospective} />
 
       <h4 className="modal-sub">My role</h4>
       <p className="modal-text">{p.role}</p>
 
       {/* SYSTEM FLOW (swimlane) */}
       <h4 className="modal-sub">System flow (swimlane diagram)</h4>
+      <p className="modal-text">{p.swimlaneExplain}</p>
       {SWIMLANE_IMG && (
         <a href={SWIMLANE_LINK} target="_blank" rel="noopener noreferrer">
           <img
@@ -171,9 +217,6 @@ function SelfProj() {
           />
         </a>
       )}
-      <p className="modal-text">
-        The diagram follows each function (register, clock in, history, messages, attendance, evidence, subjects) across the student, admin, React front end, Laravel API, and PostgreSQL.
-      </p>
       <p>
         <a className="btn ghost" href={SWIMLANE_LINK} target="_blank" rel="noopener noreferrer">
           Open the swimlane file →

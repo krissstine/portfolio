@@ -32,8 +32,68 @@ export const MONEY_PROJECT = {
   image: moneyplan,
   link: 'https://money-planner-xi.vercel.app/',
   role: 'Full-stack developer (design, build, deploy)',
+  tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Vercel'],
 
-  /* Features, grouped by the page they belong to */
+  /* ---- CASE STUDY: the questions interviewers ask ---- */
+  problem:
+    'Most people track money in their head or in a loose notes app, so spending gets out of hand and nobody notices until the month is over. Many budgeting tools also let you record expenses before any income exists, which produces budgets that look fine but are not based on real money. Money Planner fixes this by keeping income, budgets, savings goals, and bills in one place, and by refusing to record an expense for a month that has no income.',
+
+  approach: [
+    'Why React and Vite: the app is mostly forms, lists, and live totals that change as soon as a record is added. React state fits that well, and Vite gives fast reloads and a simple build for deployment.',
+    'Why local storage instead of a database: I wanted a working app that anyone can open without creating an account. Local storage meant I could finish and deploy the whole product first, and keep the data layer small enough to understand fully.',
+    'Why no router library: with only four pages, switching by state kept the code simple and removed one dependency.',
+    'Why Vercel: it deploys straight from GitHub, so every push can become a live version with no server to manage.',
+  ],
+
+  hardPart: [
+    'Keeping budgets realistic: the income-first rule had to be checked per month, not globally. Each expense is checked against the income of its own month before it is saved.',
+    'Drawing the pie chart without a library: I calculated each category\'s share of the total and converted it into SVG arc paths. It was more work than installing a chart package, but it taught me how the chart really works and keeps the bundle small.',
+    'Making CSV export safe: values that begin with characters such as = or + can run as formulas when the file is opened in a spreadsheet. I escape those values so exported data cannot execute anything.',
+    'Not losing data: records are written to local storage on every change and loaded when the app opens, so a refresh does not erase anything.',
+  ],
+
+  result: [
+    'Deployed and running at the live link above, with no login needed, so anyone can try it right away.',
+    'All four pages work end to end: Accounts, Monthly Budget, Savings Goals, and Upcoming Bills, including CSV export.',
+    'Works on both phones and desktops.',
+  ],
+
+  retrospective: [
+    'Add a back end earlier. Local storage keeps data on one device and one browser, and a user can edit it by hand, so it is not tamper-proof. An Express and PostgreSQL back end with authentication would fix both problems.',
+    'Write automated tests for the money calculations (totals, monthly grouping, savings per month), since those are the parts where a small bug gives wrong numbers.',
+    'Split the larger page components into smaller ones sooner, so each file does one job and is easier to change.',
+  ],
+
+  swimlaneExplain:
+    'This swimlane diagram shows who does what in the system, with one lane each for the user, the React pages, and browser local storage. The user only enters data and makes choices. The React pages validate that input, apply rules such as income before expenses, and calculate the totals and charts. Local storage only saves and returns records. I designed it in lanes on purpose, to keep responsibilities separate: validation lives in one place, storage is the only part that touches saved data, and the screens just display results. It also shows exactly where a future back end would plug in, because replacing the storage lane with an API and database would not change the user or page lanes.',
+
+  /* ---- FLOWCHART: how the app works, step by step ---- */
+  flowchart: [
+    { type: 'start', text: 'Open Money Planner' },
+    { type: 'data', text: 'Load transactions, budgets and goals from local storage' },
+    {
+      type: 'decision',
+      text: 'Which page does the user choose?',
+      branches: [
+        { label: 'Accounts', text: 'Add or delete a transaction, or export CSV (expense blocked if the month has no income)' },
+        { label: 'Monthly', text: 'Pick a month, view totals and the pie chart, set category budgets' },
+        { label: 'Savings', text: 'Create a goal, add savings, see progress and the monthly amount needed' },
+        { label: 'Bills', text: 'Add a bill, pick a month, mark bills as paid' },
+      ],
+    },
+    { type: 'data', text: 'Save changes to local storage and refresh the view' },
+    { type: 'end', text: 'Close the app' },
+  ],
+
+  /* ---- HOW A RECORD MOVES THROUGH THE SYSTEM ---- */
+  workflow: [
+    'The user records income for a month. This unlocks expenses for that month',
+    'The user records expenses with a description, amount, category, and date, and the balance updates right away',
+    'The Monthly Budget page groups those records by month and category, and compares spending with each category budget',
+    'Savings goals and upcoming bills are tracked on their own pages, and the user can export everything to CSV',
+  ],
+
+  /* ---- FEATURES, grouped by the page they belong to ---- */
   accountsFeatures: [
     'Record income and expenses with a description, amount, category, and date',
     'Income-first rule: expenses are blocked for any month that has no income yet',
@@ -70,25 +130,6 @@ export const MONEY_PROJECT = {
     'Form input validated before anything is saved',
   ],
 
-  /* ---- FLOWCHART: how the app works, step by step ---- */
-  flowchart: [
-    { type: 'start', text: 'Open Money Planner' },
-    { type: 'data', text: 'Load transactions, budgets and goals from local storage' },
-    {
-      type: 'decision',
-      text: 'Which page does the user choose?',
-      branches: [
-        { label: 'Accounts', text: 'Add or delete a transaction, or export CSV (expense blocked if the month has no income)' },
-        { label: 'Monthly', text: 'Pick a month, view totals and the pie chart, set category budgets' },
-        { label: 'Savings', text: 'Create a goal, add savings, see progress and the monthly amount needed' },
-        { label: 'Bills', text: 'Add a bill, pick a month, mark bills as paid' },
-      ],
-    },
-    { type: 'data', text: 'Save changes to local storage' },
-    { type: 'loop', text: 'Back to the page menu' },
-    { type: 'end', text: 'Close the app' },
-  ],
-
   /* ---- FRONT END ---- */
   frontend: {
     languages: ['JavaScript (ES6+)', 'JSX', 'HTML5', 'CSS3'],
@@ -101,12 +142,12 @@ export const MONEY_PROJECT = {
       'Custom SVG pie chart with no chart library',
       'Native date, month, and number inputs with validation',
     ],
-    storage: 'Browser local storage',
+    storage: 'Browser local storage (transactions, budgets, goals, and bills)',
     hosting: 'Vercel',
   },
 
   /* Other tools and workflow */
-  workflow: ['Git', 'GitHub', 'VS Code'],
+  workflowTools: ['Git', 'GitHub', 'VS Code'],
 
   /* Concepts practiced, commonly listed in job requirements */
   concepts: [
@@ -122,15 +163,12 @@ export const MONEY_PROJECT = {
     'Cloud deployment (Vercel) and version control (Git)',
   ],
 
-  /* Design decisions and limits, stated plainly */
+  /* ---- DESIGN DECISIONS AND LIMITS ---- */
   decisions: [
     'Data is stored in the browser, so records live on one device and browser. There is no login yet.',
     'Budgets are set per category and compare against each month\'s spending.',
     'Next step: add an Express and PostgreSQL back end with authentication so data syncs across devices.',
   ],
-
-  /* Used by the project card in App.jsx */
-  tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Vercel'],
 }
 
 /* ---- styles for the flowchart (inline, so no extra CSS file is needed) ---- */
@@ -187,7 +225,7 @@ function FlowChart({ steps }) {
             {s.type === 'decision' ? (
               <>
                 <div style={style}><strong>{s.text}</strong></div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginTop: '8px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '8px', marginTop: '8px' }}>
                   {s.branches.map((b) => (
                     <div key={b.label} style={{ ...FLOW.box, textAlign: 'left', fontSize: '0.85rem' }}>
                       <strong>{b.label}:</strong> {b.text}
@@ -215,39 +253,57 @@ function MoneyPlan() {
       <h4 className="modal-sub">About this project</h4>
       <p className="modal-text">{p.long}</p>
 
+      <h4 className="modal-sub">The problem</h4>
+      <p className="modal-text">{p.problem}</p>
+
+      <BulletGroup title="My approach: why these choices" items={p.approach} />
+
       <h4 className="modal-sub">How the app works</h4>
       <FlowChart steps={p.flowchart} />
 
-      {/* SYSTEM FLOW (swimlane) */}
-      <h4 className="modal-sub">System flow (swimlane diagram)</h4>
-      {MONEY_SWIMLANE_IMG && (
-        <a href={MONEY_SWIMLANE_LINK} target="_blank" rel="noopener noreferrer">
-          <img
-            src={MONEY_SWIMLANE_IMG}
-            alt="Swimlane diagram of the Money Planner showing the user, the React pages, and browser local storage"
-            style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '12px', marginBottom: '12px' }}
-          />
-        </a>
-      )}
-      <p className="modal-text">
-        The diagram follows each function (accounts, monthly budget, savings goals, and upcoming bills) across the user, the React pages, and browser local storage.
-      </p>
-      <p>
-        <a className="btn ghost" href={MONEY_SWIMLANE_LINK} target="_blank" rel="noopener noreferrer">
-          Open the swimlane file →
-        </a>
-      </p>
+      <h4 className="modal-sub">How a record moves through the system</h4>
+      <ol className="modal-list">
+        {p.workflow.map((s) => <li key={s}>{s}</li>)}
+      </ol>
 
-      {/* SYSTEM DOCUMENTATION */}
-      <h4 className="modal-sub">System documentation</h4>
-      <p className="modal-text">
-        The process narrative for the system: its purpose, participants, inputs, step-by-step flow for each page, decision points, exceptions, outputs, and known limitations.
-      </p>
-      <p>
-        <a className="btn ghost" href={MONEY_DOCS_LINK} target="_blank" rel="noopener noreferrer">
-          Open the documentation →
-        </a>
-      </p>
+      {/* SYSTEM FLOW (swimlane), shown only when a link or picture is set */}
+      {(MONEY_SWIMLANE_LINK || MONEY_SWIMLANE_IMG) && (
+        <>
+          <h4 className="modal-sub">System flow (swimlane diagram)</h4>
+          <p className="modal-text">{p.swimlaneExplain}</p>
+          {MONEY_SWIMLANE_IMG && (
+            <a href={MONEY_SWIMLANE_LINK || undefined} target="_blank" rel="noopener noreferrer">
+              <img
+                src={MONEY_SWIMLANE_IMG}
+                alt="Swimlane diagram of the Money Planner showing the user, the React pages, and browser local storage"
+                style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '12px', marginBottom: '12px' }}
+              />
+            </a>
+          )}
+          {MONEY_SWIMLANE_LINK && (
+            <p>
+              <a className="btn ghost" href={MONEY_SWIMLANE_LINK} target="_blank" rel="noopener noreferrer">
+                Open the swimlane file →
+              </a>
+            </p>
+          )}
+        </>
+      )}
+
+      {/* SYSTEM DOCUMENTATION, shown only when a link is set */}
+      {MONEY_DOCS_LINK && (
+        <>
+          <h4 className="modal-sub">System documentation</h4>
+          <p className="modal-text">
+            The process narrative for the system: its purpose, participants, inputs, step-by-step flow for each page, decision points, exceptions, outputs, and known limitations.
+          </p>
+          <p>
+            <a className="btn ghost" href={MONEY_DOCS_LINK} target="_blank" rel="noopener noreferrer">
+              Open the documentation →
+            </a>
+          </p>
+        </>
+      )}
 
       <BulletGroup title="Accounts page" items={p.accountsFeatures} />
       <BulletGroup title="Monthly budget page" items={p.monthlyFeatures} />
@@ -255,17 +311,20 @@ function MoneyPlan() {
       <BulletGroup title="Upcoming bills page" items={p.calendarFeatures} />
       <BulletGroup title="Across the app" items={p.generalFeatures} />
 
+      <BulletGroup title="The hardest parts and how I solved them" items={p.hardPart} />
+      <BulletGroup title="Result" items={p.result} />
+      <BulletGroup title="What I would do differently" items={p.retrospective} />
+
       <h4 className="modal-sub">My role</h4>
       <p className="modal-text">{p.role}</p>
 
-      {/* FRONT END */}
       <ChipGroup title="Front end: languages" items={p.frontend.languages} />
       <ChipGroup title="Front end: frameworks and tools" items={p.frontend.tools} />
       <BulletGroup title="Front end: techniques" items={p.frontend.techniques} />
       <p className="modal-text">Data storage: {p.frontend.storage}</p>
       <p className="modal-text">Hosted on: {p.frontend.hosting}</p>
 
-      <ChipGroup title="Workflow and tools" items={p.workflow} />
+      <ChipGroup title="Workflow and tools" items={p.workflowTools} />
       <ChipGroup title="Concepts I practiced" items={p.concepts} />
 
       <BulletGroup title="Design decisions and next steps" items={p.decisions} />

@@ -37,6 +37,41 @@ export const CWM_PROJECT = {
     { role: 'Staff', email: 'sarah@example.com', password: '123456' },
   ],
 
+  /* ---- CASE STUDY: the questions interviewers ask ---- */
+  problem:
+    'When residents notice overflowing bins, illegal dumping, or uncollected waste, there is often no clear place to report it. Reports get lost in chats and phone calls, nobody can prove what the problem looked like, and the person who reported it never learns whether anyone acted. CommunityCleanUp fixes this by giving every report a photo, a location, a priority, and a visible status, so residents can see progress and staff know what to handle first.',
+
+  approach: [
+    'Why React and Vite: the app is full of lists, filters, and status changes that must update the screen immediately. React state handles that cleanly, and Vite gives fast reloads and a simple build for deployment.',
+    'Why local storage instead of a database: I wanted to finish and deploy the whole workflow first, with demo accounts anyone can try and no server setup. It kept the data layer small enough to understand fully.',
+    'Why three roles: residents, staff, and admins each have a different job, so each sees only the pages and buttons they need. This keeps the interface simple and mirrors how a real barangay or city office would divide the work.',
+    'Why a three-step status (pending, in progress, resolved): it is simple enough for staff to use quickly, and it gives residents a clear answer to "has anyone looked at my report?"',
+    'Why Vercel: it deploys straight from GitHub, so every push can become a live version with no server to manage.',
+  ],
+
+  hardPart: [
+    'Photo storage: local storage has a small size limit, and a phone photo can be several megabytes. I resize each photo on a canvas and compress it to JPEG before saving, and the app shows a clear message if storage is still full.',
+    'Cascading deletes: when a report or user is removed, their comments must go too, and the comment counts must stay correct. Deleting now cleans up related records so no orphaned data is left behind.',
+    'Role-based screens: the same app has to behave differently for residents, staff, and admins. Each screen and button checks the signed-in role before it is shown.',
+    'Lost work: a long report form is easy to lose on a refresh, so drafts are saved while typing and restored when the user comes back.',
+  ],
+
+  result: [
+    'Deployed and running at the live link above.',
+    'Demo accounts for the Admin, Resident, and Staff roles are listed on this page, so anyone can try every role without registering.',
+    'The full workflow works end to end: submit a report with a photo, move it from pending to resolved, and upvote and comment along the way.',
+  ],
+
+  retrospective: [
+    'Build a real back end from the start. Right now the role checks and the data live in the browser, so a determined user could edit local storage and change their own role. A server that checks permissions on every request would fix that.',
+    'Hash passwords. They are currently stored as plain text, which is acceptable for a demo but not for real users. A server should store only salted hashes.',
+    'Upload photos to file storage instead of local storage, so images do not run into size limits and are kept safely as evidence.',
+    'Use a map pin for the location instead of free text, so the same place is not written in many different ways and reports can be grouped by area.',
+  ],
+
+  swimlaneExplain:
+    'This swimlane diagram shows who does what in the system, with lanes for the resident, staff, admin, the React app, and browser local storage. Residents create reports, staff change their status, and admins manage everything, while the React app checks each person\'s role, validates the input, and decides what they can see or do. Local storage only saves and returns records. I designed it in lanes on purpose, to make each role\'s responsibility and each hand-off between people visible, such as a report moving from resident to staff. It also shows where a real back end would plug in: the storage lane and the role checks would move to a server, and the people lanes would not need to change.',
+
   /* ---- FLOWCHART: how the app works, step by step ---- */
   flowchart: [
     { type: 'start', text: 'Open CommunityCleanUp' },
@@ -84,14 +119,6 @@ export const CWM_PROJECT = {
     'A resident submits a report. It starts as pending, with the date and the reporter\'s name recorded',
     'Staff start work on it, and it moves to in progress',
     'Staff mark it resolved. Everyone can then see the final status on the report card',
-  ],
-
-  /* ---- PROBLEMS I SOLVED ---- */
-  challenges: [
-    'Photo storage: each photo is resized and compressed before it is saved, and a clear message appears if storage is full',
-    'Cascading deletes: removing a report or user also removes its comments, so no orphaned data is left behind',
-    'Role-based screens: each role sees only the pages and buttons it needs',
-    'Lost work: drafts are saved while typing, so refreshing the page does not erase them',
   ],
 
   /* ---- FRONT END ---- */
@@ -211,6 +238,11 @@ export default function CwmDetails() {
       <h4 className="modal-sub">About this project</h4>
       <p className="modal-text">{p.long}</p>
 
+      <h4 className="modal-sub">The problem</h4>
+      <p className="modal-text">{p.problem}</p>
+
+      <BulletGroup title="My approach: why these choices" items={p.approach} />
+
       <h4 className="modal-sub">How the app works</h4>
       <FlowChart steps={p.flowchart} />
 
@@ -223,6 +255,7 @@ export default function CwmDetails() {
       {(CWM_SWIMLANE_LINK || CWM_SWIMLANE_IMG) && (
         <>
           <h4 className="modal-sub">System flow (swimlane diagram)</h4>
+          <p className="modal-text">{p.swimlaneExplain}</p>
           {CWM_SWIMLANE_IMG && (
             <a href={CWM_SWIMLANE_LINK || undefined} target="_blank" rel="noopener noreferrer">
               <img
@@ -269,7 +302,10 @@ export default function CwmDetails() {
       <BulletGroup title="Resident features" items={p.residentFeatures} />
       <BulletGroup title="Staff features" items={p.staffFeatures} />
       <BulletGroup title="Admin features" items={p.adminFeatures} />
-      <BulletGroup title="Challenges I solved" items={p.challenges} />
+
+      <BulletGroup title="The hardest parts and how I solved them" items={p.hardPart} />
+      <BulletGroup title="Result" items={p.result} />
+      <BulletGroup title="What I would do differently" items={p.retrospective} />
 
       <h4 className="modal-sub">My role</h4>
       <p className="modal-text">{p.role}</p>
