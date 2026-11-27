@@ -3,6 +3,7 @@
    Classy glass + standout effects. mint #46F0D2, ink #131321,
    cream #FBE2B4. Font: JetBrains Mono.
    Includes styles for Intro.jsx and CursorEffect.jsx.
+   (Bug-fixed version)
    ========================================================== */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 
@@ -58,7 +59,10 @@ body::after{
     linear-gradient(180deg,#181829 0%,#131321 60%,#101019 100%);
   background-size:56px 56px,56px 56px,auto,auto,auto,auto;
   background-attachment:fixed;
+  /* FIX: overflow-x:hidden made this a scroll container and broke the sticky nav.
+     "clip" prevents sideways overflow without that side effect (hidden = fallback). */
   overflow-x:hidden;
+  overflow-x:clip;
 }
 .portfolio *{box-sizing:border-box}
 .portfolio :where(h1,h2,h3,h4,p,a,button,input,textarea,span,li,dt,dd,blockquote,footer,strong){font-family:inherit}
@@ -139,9 +143,6 @@ body::after{
   opacity:.55;
 }
 .glass>*:not(.dot){position:relative;z-index:1}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  .glass,.nav{background:rgba(36,36,56,.96)}
-}
 
 /* ---------- navigation ---------- */
 .nav{
@@ -339,7 +340,12 @@ h1::after{
 
 /* ---------- testimonials ---------- */
 .quote{position:relative}
-.quote::after{content:'”';position:absolute;right:22px;top:-6px;font-size:6rem;line-height:1;font-weight:800;color:rgba(70,240,210,.12);pointer-events:none;z-index:0}
+/* FIX: the quote mark used .quote::after, which was always overridden by the
+   .card.glass::after gradient border. It now lives on the paragraph instead. */
+.quote p::before{
+  content:'”';position:absolute;right:0;top:-.45em;z-index:-1;
+  font-size:6rem;line-height:1;font-weight:800;color:rgba(70,240,210,.12);pointer-events:none;
+}
 .quote p{font-weight:400;font-size:.92rem;line-height:1.8;color:#fff}
 .quote footer{font-size:.78rem;color:var(--accent-2)}
 blockquote{margin:0}
@@ -390,7 +396,9 @@ dd{margin:2px 0 0;color:var(--muted);font-size:.84rem;line-height:1.8}
 /* ---------- scroll reveal (modern browsers only) ---------- */
 @supports (animation-timeline:view()){
   .sec .card,.sec .t-item,.sec-title{
-    animation:reveal linear both;animation-timeline:view();animation-range:entry 0% entry 35%;
+    /* FIX: "both" -> "backwards". With "both" the final transform:none stayed
+       applied forever and overrode the :hover lift on cards. */
+    animation:reveal linear backwards;animation-timeline:view();animation-range:entry 0% entry 35%;
   }
   .sec .card.glass::after{animation:spin 5s linear infinite;animation-timeline:auto;animation-range:normal}
   @keyframes reveal{from{opacity:0;transform:translateY(40px) scale(.97);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
@@ -401,6 +409,7 @@ dd{margin:2px 0 0;color:var(--muted);font-size:.84rem;line-height:1.8}
    ========================================================== */
 html.has-cursor,html.has-cursor *{cursor:none!important}
 html.has-cursor input,html.has-cursor textarea{cursor:text!important}
+html.has-cursor select{cursor:pointer!important}
 .cursor-trail{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:10001;mix-blend-mode:screen}
 .cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:10002;opacity:0;border-radius:50%;will-change:transform}
 .cursor-dot{width:7px;height:7px;background:var(--accent);box-shadow:0 0 14px 2px rgba(70,240,210,.7);transition:opacity .3s}
@@ -596,7 +605,7 @@ h1::after{background:var(--accent-4);box-shadow:0 0 22px rgba(255,122,217,.85)}
 }
 .when{color:var(--accent-2)}
 dt{color:var(--accent-4)}
-.quote::after{color:rgba(255,122,217,.16)}
+.quote p::before{color:rgba(255,122,217,.16)}
 .quote footer{color:var(--accent-2)}
 .more{color:var(--accent)}
 
@@ -619,4 +628,19 @@ html{scrollbar-color:#a78bff #0b0a1c}
 .intro-tag{color:var(--accent-2)}
 .ring-fill{filter:drop-shadow(0 0 8px rgba(167,139,255,.7))}
 
-@media (prefers-reduced-motion:reduce){.dot{animation:none}}
+/* ==========================================================
+   FINAL OVERRIDES (must stay last)
+   ========================================================== */
+
+/* FIX: the no-backdrop-filter fallback used to sit above the color upgrade,
+   which then overrode it with translucent backgrounds. Declared last so it wins. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .glass,.nav{background:rgba(26,24,62,.97)}
+}
+
+/* FIX: the upgrade re-applied the h1 gradient/animation after the earlier
+   reduced-motion block, and re-enabled the dot pulse. Re-assert here. */
+@media (prefers-reduced-motion:reduce){
+  h1{background:none;-webkit-text-fill-color:#fff;color:#fff}
+  h1::after,.dot,.card.glass::after{animation:none}
+}

@@ -15,89 +15,84 @@ import { playIntro, revealOnScroll, trackScroll } from './animations'
 import SelfProj, { SELF_PROJECT } from './Selfproj.jsx'
 import MoneyPlan, { MONEY_PROJECT } from './Moneyplan.jsx'
 import CwmDetails, { CWM_PROJECT } from './Cwm.jsx'
-import cert1 from '../photos/cert1.png'
 
 
 /* ---- JS: DATA object (all your content lives here) ---- */
 /* ------------------------------------------------------------------
    EDIT YOUR CONTENT HERE — everything below feeds the page.
+
+   TO DO (fill these in so the page shows evidence, not just claims):
+   1. (done) DATA.github is set and shows in the header + contact
+   2. In Selfproj.jsx / Cwm.jsx / Moneyplan.jsx, inside each *_PROJECT
+      object, add:
+         link:      'https://your-live-demo-url'
+         repo:      'https://github.com/you/your-repo'
+         problem:   'One line: what problem it solves'
+         role:      'One line: what YOU built'
+         challenge: 'One line: the hardest technical thing and how you solved it'
+      The cards below show each of these automatically when present.
    ------------------------------------------------------------------ */
 const DATA = {
-  name: 'Kristine',
+  name: 'Kristine Mae Regidor',
   role: 'Full-Stack Web Developer',
-  tagline: 'I turn ideas into reliable, easy-to-use web apps, from the first sketch to launch.',
+  tagline: 'I build and ship full-stack web apps: React frontends, REST APIs, databases, auth, and deployment.',
   bio: [
-    'I build fast, reliable web apps, from React interfaces to REST API back ends and databases, and ship them so real users can actually use them.',
-    'I take ideas from plan to launch: feature scoping, UI design, front end, back end, database, authentication, admin dashboards, and deployment.',
+    'I take products from plan to launch: scoping, UI design, front end, back end, admin dashboards, and getting them live for real users.',
   ],
   skills: [
     'Full-Stack Web Development',
     'React & Vite',
-    'Responsive UI Design',
     'REST APIs & Databases',
     'Authentication & Admin Dashboards',
     'Git & GitHub',
     'Deployment (Vercel, Render)',
   ],
 
-  /* Each project has: desc and tags (shown on the card), and a Details
-     component that fills the popup with its own content.
+  github: 'https://github.com/krissstine',
+  linkedin: 'https://www.linkedin.com/in/kristine-mae-regidor/',
 
-     Each project keeps ALL of its content in its own file:
-     Selfproj.jsx (Self-Attendance), Moneyplan.jsx (Money Planner),
-     and Cwm.jsx (CommunityCleanUp). To change anything about them,
-     edit those files only. */
+  /* Each project keeps ALL of its content in its own file:
+     Selfproj.jsx (Self-Attendance), Cwm.jsx (CommunityCleanUp),
+     Moneyplan.jsx (Money Planner). Lead project goes first. */
   projects: [
     {
-      ...SELF_PROJECT,   // title, desc, tags, image, link, and the rest, from Selfproj.jsx
-      Details: SelfProj, // the popup content, from Selfproj.jsx
+      ...SELF_PROJECT,   // title, desc, tags, image, link, repo, problem, role, challenge
+      Details: SelfProj, // the popup content
     },
     {
-      ...CWM_PROJECT,      // title, desc, tags, image, link, and the rest, from Cwm.jsx
-      Details: CwmDetails, // the popup content, from Cwm.jsx
+      ...CWM_PROJECT,
+      Details: CwmDetails,
     },
     {
-      ...MONEY_PROJECT,   // title, desc, tags, image, link, and the rest, from Moneyplan.jsx
-      Details: MoneyPlan, // the popup content, from Moneyplan.jsx
+      ...MONEY_PROJECT,
+      Details: MoneyPlan,
     },
   ],
 
+  /* Only list what you can show work for. Add a "Mobile & Desktop" group
+     back once you have a project (e.g. a small Tauri/Electron app) on the page. */
   stack: [
     { group: 'Frontend (Web)', items: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Vite', 'Tailwind CSS'] },
     { group: 'Backend & Database', items: ['Node.js', 'Express', 'REST APIs', 'MySQL', 'PostgreSQL', 'MongoDB'] },
-    { group: 'Mobile & Desktop Apps', items: ['React Native', 'Flutter', 'Electron', 'Java', 'C# (.NET)'] },
     { group: 'DevOps & Tools', items: ['Git', 'GitHub', 'Docker', 'Postman', 'Figma', 'VS Code', 'Render', 'Vercel'] },
   ],
 
-  timeline: [
-    {
-      when: '2026',
-      title: 'Virtual Job Simulations (Forage)',
-      org: 'Bloomberg · Datacom · PwC · Third Bridge · and more',
-      desc: 'Completed multiple professional job simulations covering research, customer service, merchandising, and business operations.',
-    },
-    {
-      when: '2024 – Present',
-      title: 'Member / Volunteer',
-      org: 'JCI Zamboanga City',
-      desc: 'Collaborate on community projects, coordinate schedules, and support event logistics.',
-    },
-    {
-      when: '2023 – 2027',
-      title: 'BS Information Systems',
-      org: 'Zamboanga Peninsula Polytechnic State University',
-      desc: 'Studying information systems, business processes, and organizational tools.',
-    },
+  /* Paid or contract work goes here. Leave [] to hide the section. */
+  freelance: [
+    // { when: '2026', title: 'Project name', org: 'Client', desc: 'What you delivered.' },
   ],
 
-  certificates: [
-    {
-      title: 'Certificate of Participation',
-      issuer: 'Western Mindanao State University · College of Computing Studies',
-      date: 'March 21, 2026',
-      desc: 'Awarded for active involvement in and successful completion of the CS TALK: Hack. Build. Innovate. online seminar, recognizing commitment to professional growth and the advancement of the CS community.',
-      image: cert1,
-    },
+  education: {
+    when: '2024 – 2028',
+    title: 'BS Information Systems',
+    org: 'Zamboanga Peninsula Polytechnic State University',
+    desc: 'Studying information systems, business processes, and organizational tools.',
+  },
+
+  /* One small line, not a section of its own. */
+  additional: [
+    'Virtual job simulations (Forage): Bloomberg, Datacom, PwC, Third Bridge, and more',
+    'Member / Volunteer, JCI Zamboanga City',
   ],
 
   contact: {
@@ -115,8 +110,7 @@ const NAV = [
   ['about', 'About'],
   ['projects', 'Projects'],
   ['stack', 'Tech Stack'],
-  ['experience', 'Timeline'],
-  ['proof', 'Proof'],
+  ['background', 'Background'],
   ['contact', 'Contact'],
 ]
 
@@ -138,7 +132,6 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)   // is the mobile menu open?
   const [status, setStatus] = useState('idle')      // idle | sending | sent | error
   const [form, setForm] = useState({ name: '', email: '', message: '' })
-  const [zoom, setZoom] = useState(null)            // certificate being viewed bigger
   const [project, setProject] = useState(null)      // project shown in the Details popup
 
   /* ---- JS LOGIC: plays the intro animation and reveals sections on scroll ---- */
@@ -149,10 +142,10 @@ function App() {
     return () => { stopReveal(); stopScroll() }
   }, [])
 
-  /* ---- JS LOGIC: close popups with the Esc key ---- */
+  /* ---- JS LOGIC: close the popup with the Esc key ---- */
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Escape') { setZoom(null); setProject(null) }
+      if (e.key === 'Escape') setProject(null)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -160,9 +153,9 @@ function App() {
 
   /* ---- JS LOGIC: stop the page from scrolling behind an open popup ---- */
   useEffect(() => {
-    document.body.style.overflow = (project || zoom) ? 'hidden' : ''
+    document.body.style.overflow = project ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [project, zoom])
+  }, [project])
 
   /* ---- JS LOGIC: runs when the contact form is submitted ---- */
   const handleSubmit = async (e) => {
@@ -192,6 +185,12 @@ function App() {
     }
   }
 
+  /* contact chips: GitHub first (if set), then the rest */
+  const contactLinks = [
+    ...(DATA.github ? [{ label: 'GitHub', href: DATA.github }] : []),
+    ...DATA.contact.links,
+  ]
+
   return (
     <div className="portfolio">
 
@@ -211,6 +210,10 @@ function App() {
           {NAV.map(([id, label]) => (
             <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>
           ))}
+          {DATA.github && (
+            <a href={DATA.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          )}
+          <a href={DATA.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
         </nav>
       </header>
 
@@ -226,8 +229,8 @@ function App() {
               <p key={i} className="body">{p}</p>
             ))}
             <div className="cta">
-              <a href="#contact" className="btn primary">Work with me</a>
-              <a href="#projects" className="btn ghost">See my work</a>
+              <a href="#projects" className="btn primary">See my work</a>
+              <a href="#contact" className="btn ghost">Work with me</a>
             </div>
             <div className="chips" style={{ marginTop: '24px' }}>
               {DATA.skills.map((k) => <span key={k} className="chip">{k}</span>)}
@@ -235,7 +238,7 @@ function App() {
           </div>
         </section>
 
-        {/* HTML: PROJECTS */}
+        {/* HTML: PROJECTS (the core of the page) */}
         <Section id="projects" eyebrow="Selected work" title="Projects">
           <div className="grid three">
             {DATA.projects.map((p) => (
@@ -247,23 +250,35 @@ function App() {
                 )}
                 <h3>{p.title}</h3>
                 <p>{p.desc}</p>
+
+                {/* Problem / role / challenge show only when you've filled them in */}
+                {(p.problem || p.role || p.challenge) && (
+                  <dl>
+                    {p.problem && (<><dt>Problem</dt><dd>{p.problem}</dd></>)}
+                    {p.role && (<><dt>My role</dt><dd>{p.role}</dd></>)}
+                    {p.challenge && (<><dt>Challenge</dt><dd>{p.challenge}</dd></>)}
+                  </dl>
+                )}
+
                 <div className="chips">
                   {p.tags.map((t) => <span key={t} className="chip">{t}</span>)}
                 </div>
 
-                {/* Details button opens the popup, View opens the live site */}
+                {/* Details opens the popup; Live demo and Code are the proof */}
                 <div className="card-actions">
                   <button type="button" className="btn-view" onClick={() => setProject(p)}>
                     Details
                   </button>
-                  <a
-                    className="btn-view"
-                    href={p.link || '#'}
-                    target={p.link ? '_blank' : undefined}
-                    rel="noopener noreferrer"
-                  >
-                    View <span className="arrow">→</span>
-                  </a>
+                  {p.link && (
+                    <a className="btn-view" href={p.link} target="_blank" rel="noopener noreferrer">
+                      Live demo <span className="arrow">→</span>
+                    </a>
+                  )}
+                  {p.repo && (
+                    <a className="btn-view" href={p.repo} target="_blank" rel="noopener noreferrer">
+                      Code <span className="arrow">↗</span>
+                    </a>
+                  )}
                 </div>
               </article>
             ))}
@@ -272,7 +287,7 @@ function App() {
 
         {/* HTML: TECH STACK */}
         <Section id="stack" eyebrow="Tools I use" title="Tech Stack">
-          <div className="grid four">
+          <div className="grid three">
             {DATA.stack.map((g) => (
               <div key={g.group} className="card glass">
                 <h3>{g.group}</h3>
@@ -284,44 +299,32 @@ function App() {
           </div>
         </Section>
 
-        {/* HTML: WORK HISTORY / TIMELINE */}
-        <Section id="experience" eyebrow="My journey" title="Work History & Timeline">
+        {/* HTML: BACKGROUND (freelance if any, education, one small "additional" line) */}
+        <Section id="background" eyebrow="Where I'm coming from" title="Background">
           <div className="timeline">
-            {DATA.timeline.map((t) => (
-              <div key={t.title} className="t-item">
+            {DATA.freelance.map((f) => (
+              <div key={f.title} className="t-item">
                 <span className="dot" />
                 <div className="card glass">
-                  <span className="when">{t.when}</span>
-                  <h3>{t.title}</h3>
-                  <p className="org">{t.org}</p>
-                  <p>{t.desc}</p>
+                  <span className="when">{f.when}</span>
+                  <h3>{f.title}</h3>
+                  <p className="org">{f.org}</p>
+                  <p>{f.desc}</p>
                 </div>
               </div>
             ))}
+            <div className="t-item">
+              <span className="dot" />
+              <div className="card glass">
+                <span className="when">{DATA.education.when}</span>
+                <h3>{DATA.education.title}</h3>
+                <p className="org">{DATA.education.org}</p>
+                <p>{DATA.education.desc}</p>
+              </div>
+            </div>
           </div>
-        </Section>
-
-        {/* HTML: SOCIAL PROOF (certificates + badges) */}
-        <Section id="proof" eyebrow="Certificates & credentials" title="Social Proof">
-          <div className="grid two">
-            {DATA.certificates.map((c) => (
-              <article key={c.title} className="card glass hover">
-                <img
-                  src={c.image}
-                  alt={c.title}
-                  title="Click to view bigger"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => setZoom(c)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') setZoom(c) }}
-                  style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '12px', marginBottom: '14px', cursor: 'zoom-in' }}
-                />
-                <h3>{c.title}</h3>
-                <p className="org">{c.issuer}</p>
-                <span className="when">{c.date}</span>
-                <p>{c.desc}</p>
-              </article>
-            ))}
+          <div className="chips" style={{ marginTop: '18px' }}>
+            {DATA.additional.map((a) => <span key={a} className="chip">{a}</span>)}
           </div>
         </Section>
 
@@ -333,7 +336,7 @@ function App() {
               <p>📧 {DATA.contact.email}</p>
               <p>📍 {DATA.contact.location}</p>
               <div className="chips">
-                {DATA.contact.links.map((l) => (
+                {contactLinks.map((l) => (
                   <a key={l.label} href={l.href} className="chip link" target="_blank" rel="noopener noreferrer">{l.label}</a>
                 ))}
               </div>
@@ -413,38 +416,14 @@ function App() {
                   Visit live site →
                 </a>
               )}
+              {project.repo && (
+                <a className="btn ghost" href={project.repo} target="_blank" rel="noopener noreferrer">
+                  View code ↗
+                </a>
+              )}
               <button className="btn ghost" onClick={() => setProject(null)}>Close</button>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* HTML: BIG PHOTO VIEWER (opens when a certificate is clicked) */}
-      {zoom && (
-        <div
-          onClick={() => setZoom(null)}
-          style={{
-            position: 'fixed', inset: 0, zIndex: 1000,
-            background: 'rgba(0, 0, 0, 0.88)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            padding: '24px', cursor: 'zoom-out',
-          }}
-        >
-          <button
-            onClick={() => setZoom(null)}
-            aria-label="Close"
-            style={{
-              position: 'absolute', top: '16px', right: '20px',
-              background: 'transparent', border: 'none', color: '#fff',
-              fontSize: '2rem', lineHeight: 1, cursor: 'pointer',
-            }}
-          >✕</button>
-          <img
-            src={zoom.image}
-            alt={zoom.title}
-            onClick={(e) => e.stopPropagation()}
-            style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: '12px', cursor: 'default' }}
-          />
         </div>
       )}
 
