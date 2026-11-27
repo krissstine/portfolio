@@ -30,11 +30,14 @@ export const CWM_PROJECT = {
   role: 'Full-stack developer (design, build, deploy)',
   tags: ['React', 'Vite', 'JavaScript', 'CSS', 'Vercel'],
 
-  /* Demo accounts, shown so visitors can try each role */
+  /* ---- DEMO ACCOUNTS (shown under "Try it yourself") ----
+     All three use the same password. To hide the section, set demoAccounts to []. */
+  demoNote:
+    'Sign in with any of these accounts to try each role. They are demo accounts, and the data is saved only in your own browser.',
   demoAccounts: [
-    { role: 'Admin', email: 'admin@cwm.com', password: '123456' },
-    { role: 'Resident', email: 'john@example.com', password: '123456' },
-    { role: 'Staff', email: 'sarah@example.com', password: '123456' },
+    { role: 'Admin', name: 'Admin User', email: 'admin@cwm.com', password: '123456' },
+    { role: 'Resident', name: 'John Resident', email: 'john@example.com', password: '123456' },
+    { role: 'Staff', name: 'Sarah Staff', email: 'sarah@example.com', password: '123456' },
   ],
 
   /* ---- CASE STUDY: the questions interviewers ask ---- */
@@ -70,7 +73,7 @@ export const CWM_PROJECT = {
   ],
 
   swimlaneExplain:
-    'This swimlane diagram shows who does what in the system, with lanes for the resident, staff, admin, the React app, and browser local storage. Residents create reports, staff change their status, and admins manage everything, while the React app checks each person\'s role, validates the input, and decides what they can see or do. Local storage only saves and returns records. I designed it in lanes on purpose, to make each role\'s responsibility and each hand-off between people visible, such as a report moving from resident to staff. It also shows where a real back end would plug in: the storage lane and the role checks would move to a server, and the people lanes would not need to change.',
+    "This swimlane diagram shows who does what in the system, with lanes for the resident, staff, admin, the React app, and browser local storage. Residents create reports, staff change their status, and admins manage everything, while the React app checks each person's role, validates the input, and decides what they can see or do. Local storage only saves and returns records. I designed it in lanes on purpose, to make each role's responsibility and each hand-off between people visible, such as a report moving from resident to staff. It also shows where a real back end would plug in: the storage lane and the role checks would move to a server, and the people lanes would not need to change.",
 
   /* ---- FLOWCHART: how the app works, step by step ---- */
   flowchart: [
@@ -116,7 +119,7 @@ export const CWM_PROJECT = {
 
   /* ---- HOW A REPORT MOVES THROUGH THE SYSTEM ---- */
   workflow: [
-    'A resident submits a report. It starts as pending, with the date and the reporter\'s name recorded',
+    "A resident submits a report. It starts as pending, with the date and the reporter's name recorded",
     'Staff start work on it, and it moves to in progress',
     'Staff mark it resolved. Everyone can then see the final status on the report card',
   ],
@@ -174,6 +177,16 @@ const FLOW = {
   arrow: { textAlign: 'center', color: '#9a9aa8', fontSize: '1rem', lineHeight: 1, margin: '4px 0' },
 }
 
+/* styles for the demo-account cards and copyable credentials */
+const CODE = {
+  padding: '3px 10px',
+  borderRadius: '8px',
+  background: 'rgba(167,139,255,.14)',
+  border: '1px solid rgba(167,139,255,.3)',
+  userSelect: 'all',
+  wordBreak: 'break-all',
+}
+
 /* ---- small helpers ---- */
 function ChipGroup({ title, items }) {
   return (
@@ -194,6 +207,26 @@ function BulletGroup({ title, items }) {
         {items.map((f) => <li key={f}>{f}</li>)}
       </ul>
     </>
+  )
+}
+
+/* One demo account: role, name, email, password */
+function DemoAccount({ account }) {
+  return (
+    <div style={{ ...FLOW.box, textAlign: 'left' }}>
+      <p style={{ margin: '0 0 6px' }}>
+        <strong>{account.role}</strong>
+        {account.name && <span style={{ opacity: 0.7 }}> · {account.name}</span>}
+      </p>
+      <p style={{ margin: '0 0 4px', fontSize: '0.85rem' }}>
+        <span style={{ opacity: 0.7 }}>Email: </span>
+        <code style={CODE}>{account.email}</code>
+      </p>
+      <p style={{ margin: 0, fontSize: '0.85rem' }}>
+        <span style={{ opacity: 0.7 }}>Password: </span>
+        <code style={CODE}>{account.password}</code>
+      </p>
+    </div>
   )
 }
 
@@ -237,6 +270,24 @@ export default function CwmDetails() {
     <>
       <h4 className="modal-sub">About this project</h4>
       <p className="modal-text">{p.long}</p>
+
+      {/* TRY IT YOURSELF (demo accounts, right under the intro) */}
+      {p.demoAccounts.length > 0 && (
+        <>
+          <h4 className="modal-sub">Try it yourself (demo accounts)</h4>
+          <p className="modal-text">{p.demoNote}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '8px', marginBottom: '12px' }}>
+            {p.demoAccounts.map((d) => <DemoAccount key={d.email} account={d} />)}
+          </div>
+          {p.link && (
+            <p>
+              <a className="btn ghost" href={p.link} target="_blank" rel="noopener noreferrer">
+                Open the live site →
+              </a>
+            </p>
+          )}
+        </>
+      )}
 
       <h4 className="modal-sub">The problem</h4>
       <p className="modal-text">{p.problem}</p>
@@ -291,13 +342,6 @@ export default function CwmDetails() {
       )}
 
       <BulletGroup title="Accounts and access" items={p.accessFeatures} />
-
-      <h4 className="modal-sub">Try it with a demo account</h4>
-      <ul className="modal-list">
-        {p.demoAccounts.map((d) => (
-          <li key={d.email}><strong>{d.role}:</strong> {d.email} (password: {d.password})</li>
-        ))}
-      </ul>
 
       <BulletGroup title="Resident features" items={p.residentFeatures} />
       <BulletGroup title="Staff features" items={p.staffFeatures} />

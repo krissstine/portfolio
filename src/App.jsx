@@ -25,7 +25,7 @@ import CwmDetails, { CWM_PROJECT } from './Cwm.jsx'
    1. (done) DATA.github is set and shows in the header + contact
    2. In Selfproj.jsx / Cwm.jsx / Moneyplan.jsx, inside each *_PROJECT
       object, add:
-         link:      'https://your-live-demo-url'
+         link:      'https://your-live-site-url'
          repo:      'https://github.com/you/your-repo'
          problem:   'One line: what problem it solves'
          role:      'One line: what YOU built'
@@ -270,14 +270,14 @@ function App() {
                   {p.tags.map((t) => <span key={t} className="chip">{t}</span>)}
                 </div>
 
-                {/* Details opens the popup; Live demo and Code are the proof */}
+                {/* Details opens the popup; Live site and Code are the proof */}
                 <div className="card-actions">
                   <button type="button" className="btn-view" onClick={() => setProject(p)}>
                     Details
                   </button>
                   {p.link && (
                     <a className="btn-view" href={p.link} target="_blank" rel="noopener noreferrer">
-                      Live demo <span className="arrow">→</span>
+                      Live site <span className="arrow">→</span>
                     </a>
                   )}
                   {p.repo && (
