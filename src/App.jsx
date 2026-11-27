@@ -33,7 +33,7 @@ import CwmDetails, { CWM_PROJECT } from './Cwm.jsx'
       The cards below show each of these automatically when present.
    ------------------------------------------------------------------ */
 const DATA = {
-  name: 'Kristine Mae Regidor',
+  name: 'Kristine Mae D. Regidor',
   role: 'Full-Stack Web Developer',
   tagline: 'I build and ship full-stack web apps: React frontends, REST APIs, databases, auth, and deployment.',
   bio: [
@@ -88,12 +88,6 @@ const DATA = {
     org: 'Zamboanga Peninsula Polytechnic State University',
     desc: 'Studying information systems, business processes, and organizational tools.',
   },
-
-  /* One small line, not a section of its own. */
-  additional: [
-    'Virtual job simulations (Forage): Bloomberg, Datacom, PwC, Third Bridge, and more',
-    'Member / Volunteer, JCI Zamboanga City',
-  ],
 
   contact: {
     email: 'maekristine56@gmail.com',
@@ -299,7 +293,7 @@ function App() {
           </div>
         </Section>
 
-        {/* HTML: BACKGROUND (freelance if any, education, one small "additional" line) */}
+        {/* HTML: BACKGROUND (freelance if any, then education) */}
         <Section id="background" eyebrow="Where I'm coming from" title="Background">
           <div className="timeline">
             {DATA.freelance.map((f) => (
@@ -322,9 +316,6 @@ function App() {
                 <p>{DATA.education.desc}</p>
               </div>
             </div>
-          </div>
-          <div className="chips" style={{ marginTop: '18px' }}>
-            {DATA.additional.map((a) => <span key={a} className="chip">{a}</span>)}
           </div>
         </Section>
 
