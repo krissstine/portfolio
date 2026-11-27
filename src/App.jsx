@@ -35,6 +35,7 @@ import CwmDetails, { CWM_PROJECT } from './Cwm.jsx'
 const DATA = {
   name: 'Kristine Mae D. Regidor',
   role: 'Full-Stack Web Developer',
+  photo: '/kristine.jpg',   // put your photo in the /public folder with this exact name
   tagline: 'I build and ship full-stack web apps: React frontends, REST APIs, databases, auth, and deployment.',
   bio: [
     'I take products from plan to launch: scoping, UI design, front end, back end, admin dashboards, and getting them live for real users.',
@@ -216,18 +217,29 @@ function App() {
         {/* HTML: INTRO / BIO */}
         <section id="about" className="hero">
           <div className="hero-text glass">
-            <p className="eyebrow">Hello, I'm {DATA.name} 👋</p>
-            <h1>{DATA.role}</h1>
-            <p className="lead">{DATA.tagline}</p>
-            {DATA.bio.map((p, i) => (
-              <p key={i} className="body">{p}</p>
-            ))}
-            <div className="cta">
-              <a href="#projects" className="btn primary">See my work</a>
-              <a href="#contact" className="btn ghost">Work with me</a>
-            </div>
-            <div className="chips" style={{ marginTop: '24px' }}>
-              {DATA.skills.map((k) => <span key={k} className="chip">{k}</span>)}
+            <div className="hero-grid">
+              <div className="hero-copy">
+                <p className="eyebrow">Hello, I'm {DATA.name} 👋</p>
+                <h1>{DATA.role}</h1>
+                <p className="lead">{DATA.tagline}</p>
+                {DATA.bio.map((p, i) => (
+                  <p key={i} className="body">{p}</p>
+                ))}
+                <div className="cta">
+                  <a href="#projects" className="btn primary">See my work</a>
+                  <a href="#contact" className="btn ghost">Work with me</a>
+                </div>
+                <div className="chips" style={{ marginTop: '24px' }}>
+                  {DATA.skills.map((k) => <span key={k} className="chip">{k}</span>)}
+                </div>
+              </div>
+
+              {/* HTML: profile photo (hidden if DATA.photo is empty) */}
+              {DATA.photo && (
+                <div className="hero-photo">
+                  <img src={DATA.photo} alt={DATA.name} />
+                </div>
+              )}
             </div>
           </div>
         </section>
